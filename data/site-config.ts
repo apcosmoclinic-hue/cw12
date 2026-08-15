@@ -58,6 +58,10 @@ export const SITE_CONFIG = {
     whatsapp: "https://wa.me/919766996651",
   },
 
+
+
+  
+
   stats: [
     { value: 24, suffix: "+", label: "Years of Experience" },
     { value: 50000, suffix: "+", label: "Patients Treated" },
