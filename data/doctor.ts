@@ -1,6 +1,6 @@
 export const DOCTOR = {
   name: "Dr. Anand Patil",
-  credentials: "MBBS, MD (Dermatology, Venereology & Leprosy)",
+  credentials: "MBBS, D.V.D (Dermatology, Venereology & Leprosy)",
   title: "Consultant Dermatologist, Cosmetologist & Cosmetic Laser Surgeon",
   image: "/images/doctor/dr-anand-patil.jpg",
   experience: "24+ Years",
