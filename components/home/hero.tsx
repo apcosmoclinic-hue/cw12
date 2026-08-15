@@ -64,7 +64,7 @@ export function Hero() {
         <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
           {/* ---------------- Left column ---------------- */}
           <div>
-            {/* <motion.div
+            <motion.div
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -72,7 +72,7 @@ export function Hero() {
             >
               <Star className="h-3.5 w-3.5 fill-[var(--color-accent)] text-[var(--color-accent)]" />
               24+ Years of Trusted Skin Care
-            </motion.div> */}
+            </motion.div>
 
             <motion.h1
   initial={{ opacity: 0, y: 24 }}
