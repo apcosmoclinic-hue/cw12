@@ -58,12 +58,12 @@ export const SITE_CONFIG = {
     whatsapp: "https://wa.me/919766996651",
   },
 
-  // stats: [
-  //   { value: 24, suffix: "+", label: "Years of Experience" },
-  //   { value: 50000, suffix: "+", label: "Patients Treated" },
-  //   { value: 20, suffix: "+", label: "Skin & Hair Treatments" },
-  //   { value: 4.3, suffix: "/5", label: "Patient Rating", isDecimal: true },
-  // ],
+  stats: [
+    { value: 24, suffix: "+", label: "Years of Experience" },
+    { value: 50000, suffix: "+", label: "Patients Treated" },
+    { value: 20, suffix: "+", label: "Skin & Hair Treatments" },
+    { value: 4.3, suffix: "/5", label: "Patient Rating", isDecimal: true },
+  ],
 
   trustLogos: [
     "Indian Association of Dermatologists",
