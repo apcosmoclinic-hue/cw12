@@ -111,13 +111,13 @@ export function Footer() {
   <div className="flex items-center gap-2 border-l border-white/20 pl-3">
     <span>Designed & Developed by</span>
 
-    <Image
+    {/* <Image
       src="/images/cwxlogo.png"
       alt="Codewinx IT Solutions"
       width={24}
       height={24}
       className="rounded-sm"
-    />
+    /> */}
 
     <a
       href="https://codewinx.com"

@@ -93,7 +93,7 @@ export function Hero() {
               className="mt-6 max-w-xl text-lg text-white/70 leading-relaxed"
             >
               Latur&rsquo;s trusted dermatology &amp; cosmetic laser clinic — led by{" "}
-              <span className="text-white font-medium">Dr. Anand Patil, MD (Dermatology)</span>.
+              <span className="text-white font-medium">Dr. Anand Patil, MBBS, D.V.D(Dermatology,Venerology and leprosy)</span>.
               From acne and pigmentation to hair transplant and laser care, every plan starts
               with an accurate diagnosis.
             </motion.p>
