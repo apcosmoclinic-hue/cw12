@@ -31,7 +31,7 @@ export const DOCTOR = {
   ],
   timeline: [
     { year: "MBBS", title: "Medical Foundation", description: "Completed undergraduate medical training, building a strong general clinical foundation." },
-    { year: "MD (DVL)", title: "Dermatology Specialisation", description: "Specialised training in Dermatology, Venereology & Leprosy, covering medical, surgical and STI-related skin care." },
+    { year: "D.V.D (DVL)", title: "Dermatology Specialisation", description: "Specialised training in Dermatology, Venereology & Leprosy, covering medical, surgical and STI-related skin care." },
     { year: "Clinic Founded", title: "Dr. Anand Patil Skin & Cosmetic Laser Clinic", description: "Established the clinic at Ganj Golai, Latur, to bring specialist dermatology care to the region." },
     { year: "Present Day", title: "Full-Service Skin & Laser Centre", description: "The clinic now offers medical dermatology, cosmetic procedures, laser therapy and hair transplant consultation under one roof." },
   ],
