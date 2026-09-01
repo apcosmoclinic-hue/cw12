@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export const metadata = buildMetadata({
   title: "About Dr. Anand Patil | Dermatologist in Latur",
-  description: "Dr. Anand Patil, MD (Dermatology, Venereology & Leprosy) — 24+ years of experience treating skin, hair and cosmetic concerns in Latur, Maharashtra.",
+  description: "Dr. Anand Patil, D.V.D (Dermatology, Venereology & Leprosy) — 24+ years of experience treating skin, hair and cosmetic concerns in Latur, Maharashtra.",
   path: "/doctor",
 });
 

@@ -19,7 +19,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Dr. Anand Patil Skin & Cosmetic Laser Clinic | Best Dermatologist in Latur",
   description:
-    "Latur's trusted skin, hair & laser clinic led by Dr. Anand Patil (MD Dermatology). 24+ years of experience in acne, pigmentation, hair loss, laser & cosmetic dermatology.",
+    "Latur's trusted skin, hair & laser clinic led by Dr. Anand Patil (D.V.D Dermatology). 24+ years of experience in acne, pigmentation, hair loss, laser & cosmetic dermatology.",
   path: "/",
   keywords: ["dermatologist Latur", "skin clinic Latur", "best skin doctor Latur", "Dr Anand Patil skin clinic"],
 });

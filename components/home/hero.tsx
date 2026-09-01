@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/data/site-config";
 
 const TRUST_ITEMS = [
-  { icon: ShieldCheck, label: "MD Dermatologist" },
+  { icon: ShieldCheck, label: "D.V.D Dermatologist" },
   { icon: Award, label: "50,000+ Happy Patients" },
   { icon: Sparkles, label: "Advanced Laser Technology" },
 ];
@@ -194,7 +194,7 @@ export function Hero() {
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <Image
                   src="/images/doctor/hero.jpg"
-                  alt="Dr. Anand Patil, MD Dermatology, Latur"
+                  alt="Dr. Anand Patil, D.V.D Dermatology, Latur"
                   width={560}
                   height={700}
                  className="h-[560px] w-full object-cover object-center"

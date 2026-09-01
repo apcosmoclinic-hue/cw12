@@ -13,7 +13,7 @@ export const DOCTOR = {
   ],
   qualifications: [
     { degree: "MBBS", institution: "Recognised Medical College, Maharashtra" },
-    { degree: "MD – Dermatology, Venereology & Leprosy (DVL)", institution: "Recognised Medical University" },
+    { degree: "D.V.D – Dermatology, Venereology & Leprosy (DVL)", institution: "Recognised Medical University" },
   ],
   specializations: [
     "Medical Dermatology (Psoriasis, Eczema, Vitiligo)",
