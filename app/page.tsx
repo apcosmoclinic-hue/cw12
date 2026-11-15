@@ -1,4 +1,4 @@
-import { Hero } from "@/components/home/hero";
+// import { Hero } from "@/components/home/hero";
 import { StatsCounter } from "@/components/home/stats-counter";
 import { TrustMarquee } from "@/components/home/trust-marquee";
 import { WhyChooseUs } from "@/components/home/why-choose-us";
@@ -15,6 +15,7 @@ import { JsonLd } from "@/components/ui/json-ld";
 import { getFAQSchema } from "@/lib/schema";
 import { GENERAL_FAQS } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
+import { Hero, ConsultationSteps } from "@/components/home/hero";
 
 export const metadata = buildMetadata({
   title: "Dr. Anand Patil Skin & Cosmetic Laser Clinic | Best Dermatologist in Latur",
@@ -29,6 +30,7 @@ export default function HomePage() {
     <>
       <JsonLd data={getFAQSchema(GENERAL_FAQS)} />
       <Hero />
+      <ConsultationSteps />
      
       <TrustMarquee />
       <WhyChooseUs />

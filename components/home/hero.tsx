@@ -1,52 +1,77 @@
 "use client";
 
+/**
+ * HeroSection.tsx — ALL-IN-ONE
+ * Contains: Hero (with info strip), HeroMedia (video/poster layer) and ConsultationSteps.
+ *
+ * PASTE: replace your current hero file with this one (e.g. src/components/home/Hero.tsx).
+ * Exports: `Hero` and `ConsultationSteps`.
+ *   import { Hero, ConsultationSteps } from "<path>/Hero";
+ *   <Hero />
+ *   <ConsultationSteps />
+ *
+ * NEEDS (see bottom of this comment):
+ *  1. Fonts in app/layout.tsx — Instrument_Serif (--font-instrument) + DM_Sans (--font-dm-sans)
+ *     via next/font/google, both .variable classes on <html>.
+ *  2. Media in /public/media:
+ *       clinic-hero-poster.jpg  (2400×1350, first frame of the video)
+ *       clinic-hero.webm        (1920×1080, silent, ~8–12 s)
+ *       clinic-hero.mp4         (same clip)
+ *  3. Logo stays at /public/images/logo.png (used in the header, not here).
+ *
+ * Palette: warm white #F5F2EC · ink navy #102832 · deep teal #006C65 · soft sage #ABCCC1
+ *
+ * Content is informational only (NMC ethical advertising guidelines, 6 Oct 2026):
+ * no testimonials, ratings, statistics, superiority/outcome claims, offers,
+ * patient images or doctor photograph. Footage must show no identifiable patients.
+ */
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
-import { ArrowUpRight, Clock, MapPin, Phone } from "lucide-react";
+  ArrowUpRight,
+  Clock,
+  MapPin,
+  Pause,
+  Phone,
+  Play,
+  Stethoscope,
+} from "lucide-react";
 import { SITE_CONFIG } from "@/data/site-config";
 
-/**
- * Hero — "live" composition in the logo's navy / teal / cyan palette.
- * Gentle ambient motion with pointer parallax; all motion is disabled when
- * the visitor prefers reduced motion.
- *
- * Content is informational only (NMC ethical advertising guidelines,
- * 6 Oct 2026): no testimonials, ratings, statistics, superiority or outcome
- * claims, offers, patient images or doctor photograph.
- *
- * ACTIONS BEFORE PUBLISHING (see CLINIC_FACTS below):
- *  1. Set LOGO_SRC to your logo file in /public.
- *  2. Fill `qualifications` and `registration` ONLY with details verified
- *     against the doctor's registration documents. Empty = not shown.
- *  3. Fill `address` with the confirmed full address. Empty = city only.
- *  4. Have the clinic confirm `hours` and `closedDay` in writing.
- *  5. Record written clinic approval of the hero text, including STEPS.
- */
-const LOGO_SRC = "/images/logo.png";
+/* ════════════════════════════════════════════════════════════
+   CONFIG
+   ════════════════════════════════════════════════════════════ */
 
+/**
+ * ACTIONS BEFORE PUBLISHING
+ *  - Fill `qualifications` and `registration` ONLY from the doctor's verified
+ *    registration documents. Empty = not shown.
+ *  - Fill `address` with the confirmed full address. Empty = city only.
+ *  - Get the clinic to confirm `hours` / `closedDay` in writing.
+ *  - Record written clinic approval of the final hero text.
+ */
 const CLINIC_FACTS = {
   doctorName: "Dr. Anand Patil",
-  /** Verified, recognised qualification text exactly as on the registration certificate. */
+  /** Exactly as on the registration certificate. */
   qualifications: "",
-  /** Verified State Medical Council registration, e.g. "Maharashtra Medical Council – Reg. No. 00000". */
+  /** e.g. "Maharashtra Medical Council – Reg. No. 00000" */
   registration: "",
-  /** Confirmed full address of the clinic. */
+  /** Confirmed full address. */
   address: "",
-  /** Existing site values — pending clinic confirmation. */
+  /** Carried over from the existing site — pending clinic confirmation. */
   hours: "11:00 AM – 6:00 PM",
   closedDay: "Sunday closed",
 };
 
-const focusRing =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#7FE0EA]";
+const HERO_MEDIA = {
+  poster: "/media/clinic-hero-poster.jpg",
+  webm: "/media/clinic-hero.webm",
+  mp4: "/media/clinic-hero.mp4",
+  alt: "Reception and consultation room of Dr. Anand Patil Skin & Cosmetic Laser Clinic, Latur",
+};
 
 const STEPS = [
   { title: "Enquiry", copy: "Contact the clinic to ask about an appointment." },
@@ -54,483 +79,413 @@ const STEPS = [
   { title: "Discussion", copy: "Treatment options are explained to you." },
 ];
 
-const HEADLINE: { word: string; accent?: boolean }[] = [
-  { word: "Consultation" },
-  { word: "for" },
-  { word: "skin", accent: true },
-  { word: "&", accent: true },
-  { word: "hair", accent: true },
-  { word: "concerns." },
-];
+const serif = "font-[family-name:var(--font-instrument)]";
+const sans = "font-[family-name:var(--font-dm-sans)]";
 
-/* ---------- small motion helpers ---------- */
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ABCCC1]";
 
-function Layer({
-  children,
-  className,
-  depth,
-  sx,
-  sy,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  depth: number;
-  sx: MotionValue<number>;
-  sy: MotionValue<number>;
-}) {
-  const x = useTransform(sx, (v) => v * depth);
-  const y = useTransform(sy, (v) => v * depth);
+/* ════════════════════════════════════════════════════════════
+   HeroMedia — poster / video / push-in layer
+   Modes:
+     still  : mobile, tablet, reduced motion, data-saver, slow network → poster only
+     video  : muted, inline, looping clip (desktop)
+     pushin : desktop but video missing/failed → poster with ONE slow push-in
+   ════════════════════════════════════════════════════════════ */
+
+type Mode = "still" | "video" | "pushin";
+type NetworkInfo = { saveData?: boolean; effectiveType?: string };
+
+function StaticScene() {
   return (
-    <motion.div style={{ x, y }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
-
-function Float({
-  children,
-  className,
-  amp = 8,
-  duration = 6,
-  delay = 0,
-  reduce,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  amp?: number;
-  duration?: number;
-  delay?: number;
-  reduce: boolean;
-}) {
-  return (
-    <motion.div
-      className={className}
-      animate={reduce ? undefined : { y: [-amp, amp] }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        repeatType: "mirror",
-        ease: "easeInOut",
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function Sparkle({
-  className,
-  size,
-  delay,
-  reduce,
-}: {
-  className: string;
-  size: number;
-  delay: number;
-  reduce: boolean;
-}) {
-  return (
-    <motion.svg
+    <div
       aria-hidden="true"
-      focusable="false"
-      viewBox="0 0 40 40"
-      width={size}
-      height={size}
-      className={className}
-      animate={
-        reduce
-          ? undefined
-          : { scale: [0.7, 1.15, 0.7], opacity: [0.5, 1, 0.5], rotate: [0, 18, 0] }
-      }
-      transition={{ duration: 3.4, delay, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute inset-0 bg-[radial-gradient(120%_90%_at_78%_35%,#2C5560_0%,#18383F_45%,#102832_100%)]"
     >
-      <path
-        d="M20 0 C21 12 28 19 40 20 C28 21 21 28 20 40 C19 28 12 21 0 20 C12 19 19 12 20 0Z"
-        fill="#7FE0EA"
+      <svg
+        viewBox="0 0 1600 900"
+        preserveAspectRatio="xMaxYMid slice"
+        className="absolute inset-0 h-full w-full"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="hm-beam" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#F5F2EC" stopOpacity="0.34" />
+            <stop offset="1" stopColor="#F5F2EC" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="hm-door" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#F5F2EC" stopOpacity="0.55" />
+            <stop offset="1" stopColor="#ABCCC1" stopOpacity="0.15" />
+          </linearGradient>
+          <linearGradient id="hm-floor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#ABCCC1" stopOpacity="0.16" />
+            <stop offset="1" stopColor="#102832" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <g transform="skewX(-12)">
+          <rect x="1020" y="0" width="120" height="640" fill="url(#hm-beam)" />
+          <rect x="1170" y="0" width="120" height="640" fill="url(#hm-beam)" />
+          <rect x="1320" y="0" width="120" height="640" fill="url(#hm-beam)" />
+        </g>
+        <rect x="1180" y="250" width="190" height="380" rx="6" fill="url(#hm-door)" />
+        <rect x="1180" y="250" width="190" height="380" rx="6" fill="none" stroke="#ABCCC1" strokeOpacity="0.35" />
+        <rect x="0" y="630" width="1600" height="270" fill="url(#hm-floor)" />
+        <line x1="0" y1="630" x2="1600" y2="630" stroke="#ABCCC1" strokeOpacity="0.2" />
+      </svg>
+    </div>
+  );
+}
+
+function HeroMedia({ className = "" }: { className?: string }) {
+  const [canAnimate, setCanAnimate] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [posterOk, setPosterOk] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const wide = window.matchMedia("(min-width: 1024px)");
+    const calm = window.matchMedia("(prefers-reduced-motion: no-preference)");
+
+    const evaluate = () => {
+      const conn = (navigator as Navigator & { connection?: NetworkInfo }).connection;
+      const constrained =
+        !!conn?.saveData ||
+        ["slow-2g", "2g", "3g"].includes(conn?.effectiveType ?? "");
+      const ok = wide.matches && calm.matches && !constrained;
+      setCanAnimate(ok);
+      if (!ok) {
+        setVideoReady(false);
+        setPaused(false);
+      }
+    };
+
+    evaluate();
+    wide.addEventListener("change", evaluate);
+    calm.addEventListener("change", evaluate);
+    return () => {
+      wide.removeEventListener("change", evaluate);
+      calm.removeEventListener("change", evaluate);
+    };
+  }, []);
+
+  const mode: Mode = !canAnimate ? "still" : videoFailed ? "pushin" : "video";
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (mode !== "video" || !v) return;
+    if (paused) {
+      v.pause();
+    } else {
+      v.play().catch(() => setVideoFailed(true));
+    }
+  }, [mode, paused]);
+
+  const showControl = mode === "pushin" || (mode === "video" && videoReady);
+
+  return (
+    <div className={`overflow-hidden bg-[#102832] ${className}`}>
+      <style>{`
+        @keyframes hero-push { from { transform: scale(1); } to { transform: scale(1.09); } }
+        .hero-pushin { transform-origin: 72% 55%; animation: hero-push 28s ease-out forwards; }
+        .hero-paused { animation-play-state: paused; }
+        @media (prefers-reduced-motion: reduce) { .hero-pushin { animation: none; } }
+      `}</style>
+
+      {/* 1 — built-in fallback (visible only if the poster file is missing) */}
+      <StaticScene />
+
+      {/* 2 — poster: rendered from first paint, stays under the video */}
+      {posterOk && (
+        <Image
+          src={HERO_MEDIA.poster}
+          alt={HERO_MEDIA.alt}
+          fill
+          priority
+          quality={80}
+          sizes="100vw"
+          onError={() => setPosterOk(false)}
+          className={`object-cover object-[72%_50%] ${
+            mode === "pushin" ? "hero-pushin" : ""
+          } ${mode === "pushin" && paused ? "hero-paused" : ""}`}
+        />
+      )}
+
+      {/* 3 — video (desktop, motion allowed, no data-saver) */}
+      {mode === "video" && (
+        <video
+          ref={videoRef}
+          aria-hidden="true"
+          tabIndex={-1}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={HERO_MEDIA.poster}
+          onPlaying={() => setVideoReady(true)}
+          className={`absolute inset-0 h-full w-full object-cover object-[72%_50%] transition-opacity duration-1000 ${
+            videoReady ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <source src={HERO_MEDIA.webm} type="video/webm" />
+          <source
+            src={HERO_MEDIA.mp4}
+            type="video/mp4"
+            onError={() => setVideoFailed(true)}
+          />
+        </video>
+      )}
+
+      {/* 4 — ink overlays */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-[#102832] to-transparent lg:hidden"
       />
-    </motion.svg>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden lg:block"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(16,40,50,0.95) 0%, rgba(16,40,50,0.80) 30%, rgba(16,40,50,0.30) 58%, rgba(16,40,50,0) 80%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(16,40,50,1) 0%, rgba(16,40,50,0.55) 45%, rgba(16,40,50,0) 100%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 hidden h-40 lg:block"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(16,40,50,0.75) 0%, rgba(16,40,50,0) 100%)",
+        }}
+      />
+
+      {/* 5 — discreet pause control */}
+      {showControl && (
+        <button
+          type="button"
+          onClick={() => setPaused((p) => !p)}
+          aria-pressed={paused}
+          className={`absolute bottom-5 right-5 z-20 inline-flex min-h-11 items-center gap-2 rounded-full border border-[#F5F2EC]/25 bg-[#102832]/60 px-4 text-xs font-medium tracking-wide text-[#F5F2EC] backdrop-blur transition-colors hover:bg-[#102832]/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ABCCC1] lg:bottom-6 lg:right-10 ${sans}`}
+        >
+          {paused ? (
+            <Play className="h-3.5 w-3.5" aria-hidden="true" />
+          ) : (
+            <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+          )}
+          {paused ? "Play background" : "Pause background"}
+        </button>
+      )}
+    </div>
   );
 }
 
-function Aurora({
-  className,
-  dx,
-  dy,
-  duration,
-  reduce,
-}: {
-  className: string;
-  dx: number;
-  dy: number;
-  duration: number;
-  reduce: boolean;
-}) {
-  return (
-    <motion.div
-      aria-hidden="true"
-      className={`absolute rounded-full blur-3xl ${className}`}
-      animate={
-        reduce ? undefined : { x: [0, dx], y: [0, dy], scale: [1, 1.18] }
-      }
-      transition={{
-        duration,
-        repeat: Infinity,
-        repeatType: "mirror",
-        ease: "easeInOut",
-      }}
-    />
-  );
-}
-
-/* ---------- Hero ---------- */
+/* ════════════════════════════════════════════════════════════
+   Hero + information strip
+   ════════════════════════════════════════════════════════════ */
 
 export function Hero() {
-  const prefersReduced = useReducedMotion();
-  const reduce = !!prefersReduced;
-
-  // Pointer parallax (-1 … 1), smoothed with a spring.
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 55, damping: 18 });
-  const sy = useSpring(my, { stiffness: 55, damping: 18 });
-
-  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    if (reduce) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set(((e.clientX - r.left) / r.width - 0.5) * 2);
-    my.set(((e.clientY - r.top) / r.height - 0.5) * 2);
-  };
-  const onPointerLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
-
-  // One-time entrance. Opacity is never animated, so content is always visible.
-  const rise = (delay: number) =>
-    reduce
-      ? {}
-      : {
-          initial: { y: 18 },
-          animate: { y: 0 },
-          transition: { duration: 0.7, delay, ease: "easeOut" as const },
-        };
-
+  const reduce = !!useReducedMotion();
   const { doctorName, qualifications, registration, address, hours, closedDay } =
     CLINIC_FACTS;
 
-  return (
-    <section
-      aria-labelledby="hero-heading"
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
-      className="relative overflow-hidden bg-[#06182E] pt-[var(--header-height)] text-white"
-    >
-      {/* Section-wide drifting light */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <Aurora
-          reduce={reduce}
-          dx={90}
-          dy={50}
-          duration={14}
-          className="-left-40 top-10 h-[520px] w-[520px] bg-[#0A8F8A]/25"
-        />
-        <Aurora
-          reduce={reduce}
-          dx={-80}
-          dy={-40}
-          duration={17}
-          className="-right-32 bottom-0 h-[560px] w-[560px] bg-[#0A6FB8]/30"
-        />
-      </div>
+  // One subtle entrance. Opacity is never animated, so copy is always visible.
+  const entrance = reduce
+    ? {}
+    : {
+        initial: { y: 22 },
+        animate: { y: 0 },
+        transition: { duration: 0.9, delay: 0.1, ease: "easeOut" as const },
+      };
 
-      <div className="relative mx-auto max-w-[1280px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
-        <div className="grid items-center gap-14 lg:grid-cols-[11fr_9fr] lg:gap-10">
-          {/* ========================= Text ========================= */}
-          <div className="max-w-[680px]">
-            <motion.p
-              {...rise(0)}
-              className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#7FE0EA]"
-            >
-              <span aria-hidden="true" className="h-px w-8 bg-[#7FE0EA]" />
-              Dermatology Clinic &middot; Latur
-            </motion.p>
+  const phone = SITE_CONFIG.contact.phonePrimaryRaw;
+  const doctorSub = [qualifications, registration].filter(Boolean).join(" · ");
+
+  const facts = [
+    {
+      icon: Stethoscope,
+      label: "Doctor",
+      value: doctorName,
+      sub: doctorSub || undefined,
+      href: undefined as string | undefined,
+    },
+    {
+      icon: MapPin,
+      label: address ? "Address" : "Location",
+      value: address || "Latur, Maharashtra",
+      sub: undefined as string | undefined,
+      href: undefined as string | undefined,
+    },
+    {
+      icon: Clock,
+      label: "Clinic hours",
+      value: hours,
+      sub: closedDay as string | undefined,
+      href: undefined as string | undefined,
+    },
+    {
+      icon: Phone,
+      label: "Phone",
+      value: phone,
+      sub: undefined as string | undefined,
+      href: `tel:${phone}` as string | undefined,
+    },
+  ];
+
+  return (
+    <>
+      <section
+        aria-labelledby="hero-heading"
+        className={`relative isolate flex flex-col overflow-hidden bg-[#102832] text-[#F5F2EC] lg:min-h-[max(680px,min(100svh,920px))] lg:justify-end ${sans}`}
+      >
+        {/* Copy — above the still image on mobile/tablet; bottom-left on desktop */}
+        <div className="relative z-10 order-1 mx-auto w-full max-w-[1360px] px-5 pb-8 pt-[calc(var(--header-height,80px)+2rem)] sm:px-8 lg:order-2 lg:px-12 lg:pb-16 lg:pt-40">
+          <motion.div {...entrance} className="max-w-[640px]">
+            <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-[#ABCCC1]">
+              <span aria-hidden="true" className="h-px w-8 bg-[#ABCCC1]" />
+              Dermatology clinic in Latur
+            </p>
 
             <h1
               id="hero-heading"
-              className="mt-6 font-display font-semibold tracking-tight"
+              className={`${serif} mt-5 max-w-[15ch] text-balance font-normal tracking-[-0.01em] text-[#F5F2EC]`}
               style={{
-                fontSize: "clamp(2.5rem, 1.1rem + 5vw, 5.25rem)",
-                lineHeight: 1.03,
+                fontSize: "clamp(2.75rem, 1.7rem + 4.6vw, 5.5rem)",
+                lineHeight: 1.02,
               }}
             >
-              {HEADLINE.map(({ word, accent }, i) => (
-                <motion.span
-                  key={`${word}-${i}`}
-                  {...rise(0.08 + i * 0.07)}
-                  className={`mr-[0.22em] inline-block ${
-                    accent ? "text-[#7FE0EA]" : ""
-                  }`}
-                >
-                  {word}
-                </motion.span>
-              ))}
+              Consultations for <em className="italic">skin and hair</em>
             </h1>
 
-            <motion.p
-              {...rise(0.5)}
-              className="mt-7 max-w-[34rem] text-base leading-relaxed text-[#C9D8E6] sm:text-lg"
-            >
-              Consultations for skin and hair concerns, with information about
-              treatment options following a clinical assessment.
-            </motion.p>
+            <p className="mt-5 max-w-[30rem] text-base leading-relaxed text-[#F5F2EC]/80 sm:text-lg">
+              Discuss your concerns and treatment options after a clinical
+              assessment.
+            </p>
 
-            {/* Doctor identification — factual details, shown only when verified */}
-            <motion.div
-              {...rise(0.56)}
-              className="mt-7 border-l-2 border-[#5FD6D0] pl-4"
-            >
-              <p className="text-lg font-semibold leading-tight">{doctorName}</p>
-              {qualifications ? (
-                <p className="mt-1 text-sm text-[#C9D8E6]">{qualifications}</p>
-              ) : null}
-              {registration ? (
-                <p className="mt-0.5 text-sm text-[#C9D8E6]">{registration}</p>
-              ) : null}
-            </motion.div>
-
-            <motion.div
-              {...rise(0.62)}
-              className="mt-8 flex flex-col gap-3 sm:flex-row"
-            >
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/contact"
-                className={`group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#5FD6D0] px-8 text-base font-semibold text-[#06182E] transition-colors hover:bg-[#8CE6E1] ${focusRing}`}
+                className={`group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#006C65] px-8 text-base font-medium text-[#F5F2EC] ring-1 ring-[#ABCCC1]/40 transition-colors hover:bg-[#00807A] ${focusRing}`}
               >
-                Appointment Enquiry
+                Appointment enquiry
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   aria-hidden="true"
                 />
               </Link>
               <a
-                href={`tel:${SITE_CONFIG.contact.phonePrimaryRaw}`}
-                className={`inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/40 px-8 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white/10 ${focusRing}`}
+                href={`tel:${phone}`}
+                className={`inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[#F5F2EC]/45 px-8 text-base font-medium text-[#F5F2EC] transition-colors hover:border-[#F5F2EC] hover:bg-[#F5F2EC]/10 ${focusRing}`}
               >
                 <Phone className="h-4 w-4" aria-hidden="true" />
-                Contact Clinic
-                <span className="sr-only"> by phone</span>
+                Call the clinic
               </a>
-            </motion.div>
-          </div>
-
-          {/* ========================= Orb ========================= */}
-          <div className="relative mx-auto aspect-square w-full max-w-[480px]">
-            {/* Aurora behind the logo */}
-            <Layer sx={sx} sy={sy} depth={10} className="absolute inset-0">
-              <Aurora
-                reduce={reduce}
-                dx={30}
-                dy={-24}
-                duration={8}
-                className="inset-[8%] bg-[#0A8F8A]/45"
-              />
-              <Aurora
-                reduce={reduce}
-                dx={-34}
-                dy={28}
-                duration={10}
-                className="inset-[18%] bg-[#00B4D0]/30"
-              />
-            </Layer>
-
-            {/* Rings and crescent arcs */}
-            <Layer sx={sx} sy={sy} depth={16} className="absolute inset-0">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 500 500"
-                className="absolute inset-0 h-full w-full"
-                fill="none"
-              >
-                <defs>
-                  <linearGradient id="hero-arc-a" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#00B4D0" />
-                    <stop offset="100%" stopColor="#0A6FB8" stopOpacity="0" />
-                  </linearGradient>
-                  <linearGradient id="hero-arc-b" x1="1" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#5FD6D0" />
-                    <stop offset="100%" stopColor="#0A8F8A" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <circle cx="250" cy="250" r="246" stroke="#7FE0EA" strokeOpacity="0.10" />
-                <circle cx="250" cy="250" r="206" stroke="#7FE0EA" strokeOpacity="0.08" />
-              </svg>
-
-              <motion.svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 500 500"
-                className="absolute inset-0 h-full w-full"
-                fill="none"
-                style={{ transformOrigin: "50% 50%" }}
-                animate={reduce ? undefined : { rotate: 360 }}
-                transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
-              >
-                <circle
-                  cx="250"
-                  cy="250"
-                  r="236"
-                  stroke="url(#hero-arc-a)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeDasharray="620 900"
-                />
-              </motion.svg>
-
-              <motion.svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 500 500"
-                className="absolute inset-0 h-full w-full"
-                fill="none"
-                style={{ transformOrigin: "50% 50%" }}
-                animate={reduce ? undefined : { rotate: -360 }}
-                transition={{ duration: 95, repeat: Infinity, ease: "linear" }}
-              >
-                <circle
-                  cx="250"
-                  cy="250"
-                  r="206"
-                  stroke="url(#hero-arc-b)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeDasharray="380 920"
-                />
-              </motion.svg>
-            </Layer>
-
-            {/* Logo disc */}
-            <Layer sx={sx} sy={sy} depth={28} className="absolute inset-[20%]">
-              <Float reduce={reduce} amp={8} duration={6} className="h-full w-full">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-white p-[9%] shadow-[0_0_90px_-10px_rgba(95,214,208,0.6)]">
-                  <Image
-                    src={LOGO_SRC}
-                    alt="Dr. Anand Patil Skin & Cosmetic Laser Clinic logo"
-                    width={400}
-                    height={400}
-                    priority
-                    sizes="(min-width: 1024px) 220px, 180px"
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-              </Float>
-            </Layer>
-
-            {/* Sparkles (echo the logo) */}
-            <Sparkle
-              reduce={reduce}
-              size={34}
-              delay={0}
-              className="absolute right-[10%] top-[12%]"
-            />
-            <Sparkle
-              reduce={reduce}
-              size={20}
-              delay={1.1}
-              className="absolute right-[3%] top-[28%]"
-            />
-            <Sparkle
-              reduce={reduce}
-              size={24}
-              delay={2}
-              className="absolute bottom-[26%] left-[6%]"
-            />
-
-            {/* Factual info chips */}
-            <Layer sx={sx} sy={sy} depth={44} className="absolute inset-0">
-              {/* Hours — carried over from existing site; pending clinic confirmation */}
-              <Float
-                reduce={reduce}
-                amp={6}
-                duration={5}
-                delay={0.4}
-                className="absolute bottom-[2%] left-0"
-              >
-                <div className="flex items-center gap-3 rounded-2xl border border-[#1F4A73] bg-[#0D2A4A] px-4 py-3 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.7)]">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0B7F7B]">
-                    <Clock className="h-4 w-4 text-white" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#9FB6CC]">
-                      Clinic hours
-                    </p>
-                    <p className="text-sm font-semibold leading-tight">{hours}</p>
-                    <p className="text-xs text-[#C9D8E6]">{closedDay}</p>
-                  </div>
-                </div>
-              </Float>
-
-              <Float
-                reduce={reduce}
-                amp={6}
-                duration={5.6}
-                delay={1.2}
-                className="absolute right-0 top-[44%]"
-              >
-                <div className="flex max-w-[250px] items-center gap-3 rounded-2xl border border-[#1F4A73] bg-[#0D2A4A] px-4 py-3 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.7)]">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0A6FB8]">
-                    <MapPin className="h-4 w-4 text-white" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#9FB6CC]">
-                      {address ? "Address" : "Location"}
-                    </p>
-                    <p className="text-sm font-semibold leading-tight">
-                      {address || "Latur, Maharashtra"}
-                    </p>
-                  </div>
-                </div>
-              </Float>
-            </Layer>
-          </div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* ===================== Consultation steps ===================== */}
-        <div className="relative mt-14 lg:mt-16">
-          <motion.div
-            aria-hidden="true"
-            className="absolute left-0 right-0 top-0 h-px origin-left bg-gradient-to-r from-[#5FD6D0] via-[#5FD6D0]/40 to-transparent"
-            initial={reduce ? false : { scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.3, delay: 0.6, ease: "easeOut" }}
-          />
-          <p className="pt-6 text-xs font-semibold uppercase tracking-[0.18em] text-[#7FE0EA]">
-            How a consultation works
-          </p>
-          <ol className="mt-5 grid gap-6 sm:grid-cols-3 sm:gap-8">
-            {STEPS.map((step, i) => (
-              <motion.li
-                key={step.title}
-                {...rise(0.8 + i * 0.1)}
-                className="flex gap-4"
+        {/* Media */}
+        <HeroMedia className="relative order-2 aspect-[4/5] w-full sm:aspect-[16/10] lg:absolute lg:inset-0 lg:-z-0 lg:order-none lg:aspect-auto" />
+      </section>
+
+      {/* Slim information strip */}
+      <div className={`bg-[#F5F2EC] text-[#102832] ${sans}`}>
+        <dl className="mx-auto grid max-w-[1360px] divide-y divide-[#102832]/10 px-5 sm:grid-cols-2 sm:divide-y-0 sm:px-8 lg:grid-cols-4 lg:divide-x lg:px-12">
+          {facts.map(({ icon: Icon, label, value, sub, href }) => (
+            <div
+              key={label}
+              className="flex items-start gap-3 py-5 sm:py-6 lg:px-6 lg:first:pl-0"
+            >
+              <span
+                aria-hidden="true"
+                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ABCCC1]/40 text-[#006C65]"
               >
-                <span
-                  aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#5FD6D0]/60 text-sm font-semibold text-[#7FE0EA]"
-                >
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="text-base font-semibold">{step.title}</p>
-                  <p className="mt-1 text-sm leading-snug text-[#C9D8E6]">
-                    {step.copy}
-                  </p>
-                </div>
-              </motion.li>
-            ))}
-          </ol>
-        </div>
+                <Icon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <dt className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#006C65]">
+                  {label}
+                </dt>
+                <dd className="mt-0.5 text-[15px] font-medium leading-snug">
+                  {href ? (
+                    <a
+                      href={href}
+                      className="underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006C65]"
+                    >
+                      {value}
+                    </a>
+                  ) : (
+                    value
+                  )}
+                </dd>
+                {sub ? (
+                  <dd className="text-sm leading-snug text-[#102832]/70">{sub}</dd>
+                ) : null}
+              </div>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   ConsultationSteps — "How a consultation works" (place right after <Hero />)
+   ════════════════════════════════════════════════════════════ */
+
+export function ConsultationSteps() {
+  const reduce = !!useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="steps-heading"
+      className={`bg-[#102832] text-[#F5F2EC] ${sans}`}
+    >
+      <div className="mx-auto max-w-[1360px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#ABCCC1]">
+          Before you visit
+        </p>
+        <h2
+          id="steps-heading"
+          className={`${serif} mt-3 text-4xl font-normal sm:text-5xl`}
+        >
+          How a consultation works
+        </h2>
+
+        <ol className="mt-10 grid gap-8 border-t border-[#F5F2EC]/15 pt-8 sm:grid-cols-3 sm:gap-10">
+          {STEPS.map((step, i) => (
+            <motion.li
+              key={step.title}
+              initial={reduce ? false : { y: 16 }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: "easeOut" }}
+              className="flex gap-4"
+            >
+              <span
+                aria-hidden="true"
+                className={`${serif} flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ABCCC1]/60 text-lg text-[#ABCCC1]`}
+              >
+                {i + 1}
+              </span>
+              <div>
+                <h3 className="text-base font-medium">{step.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[#F5F2EC]/75">
+                  {step.copy}
+                </p>
+              </div>
+            </motion.li>
+          ))}
+        </ol>
       </div>
     </section>
   );
