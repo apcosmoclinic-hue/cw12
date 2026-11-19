@@ -21,7 +21,6 @@ import { getBreadcrumbSchema, getPhysicianSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
 import { DOCTOR } from "@/data/doctor";
 import { SITE_CONFIG } from "@/data/site-config";
-
 /**
  * About Dr. Anand Patil - factual profile only.
  *
@@ -51,10 +50,8 @@ export const metadata = buildMetadata({
     "Dr. Anand Patil, MBBS, D.V.D. (Dermatology, Venereology & Leprosy). Qualifications, memberships and consultation areas at Ganj Golai, Latur, Maharashtra.",
   path: "/doctor",
 });
-
 // TODO: add the Maharashtra Medical Council registration number (leave "" to hide).
 const REGISTRATION_NUMBER = "";
-
 const STEPS: { icon: LucideIcon; title: string; text: string }[] = [
   {
     icon: ClipboardList,
@@ -72,10 +69,8 @@ const STEPS: { icon: LucideIcon; title: string; text: string }[] = [
     text: "Follow-up visits are used to review your progress and update the plan as your condition needs.",
   },
 ];
-
 const focusRing =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]";
-
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]";
 function FloatChip({
   icon: Icon,
   label,
@@ -87,7 +82,7 @@ function FloatChip({
 }) {
   return (
     <div
-      className={`absolute z-10 flex max-w-[15rem] items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 text-[#06182E] shadow-xl shadow-black/25 ring-1 ring-white/60 backdrop-blur ${className}`}
+      className={`absolute z-10 flex max-w-[15rem] items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 text-[#112638] shadow-xl shadow-black/25 ring-1 ring-white/60 backdrop-blur ${className}`}
     >
       <span
         aria-hidden="true"
@@ -99,26 +94,21 @@ function FloatChip({
     </div>
   );
 }
-
 export default function DoctorPage() {
   const nameParts = DOCTOR.name.split(" ");
   const lastWord = nameParts.pop();
   const firstWords = nameParts.join(" ");
-
   const council = DOCTOR.memberships.find((m: string) =>
     /medical council/i.test(m)
   );
   const otherMemberships = DOCTOR.memberships.filter(
     (m: string) => m !== council
   );
-
   const chipA = DOCTOR.qualifications[0]?.degree;
   const chipB = DOCTOR.qualifications[1]?.degree;
-
   const directionsHref = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
     SITE_CONFIG.address.full
   )}`;
-
   return (
     <>
       <style>{`
@@ -135,7 +125,6 @@ export default function DoctorPage() {
           .dp-float, .dp-float-b, .dp-spin, .dp-reveal { animation: none !important }
         }
       `}</style>
-
       <JsonLd
         data={[
           getBreadcrumbSchema([
@@ -145,18 +134,17 @@ export default function DoctorPage() {
           getPhysicianSchema(),
         ]}
       />
-
       {/* ============================== HERO ============================== */}
       <section
         aria-labelledby="doctor-title"
-        className="relative overflow-hidden bg-gradient-to-br from-[#0D2E52] via-[#0A2342] to-[#06182E] text-white"
+        className="relative overflow-hidden bg-gradient-to-br from-[#FCFEFE] via-[#F2FAFC] to-[#E8F5F8] text-[#112638]"
       >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             backgroundImage:
-              "radial-gradient(rgba(127,224,234,0.35) 1px, transparent 1px)",
+              "radial-gradient(rgba(118,165,181,0.35) 1px, transparent 1px)",
             backgroundSize: "26px 26px",
             maskImage:
               "radial-gradient(ellipse at 75% 40%, black 0%, transparent 65%)",
@@ -172,55 +160,50 @@ export default function DoctorPage() {
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 top-0 h-[28rem] w-[28rem] rounded-full bg-sky-500/20 blur-3xl"
         />
-
         <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 py-16 sm:py-20 lg:grid-cols-12 lg:gap-12 lg:py-24">
           {/* Text */}
           <div className="lg:col-span-7">
             <nav aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2 text-sm text-white/70">
+              <ol className="flex items-center gap-2 text-sm text-[#4B6471]">
                 <li>
                   <Link
                     href="/"
-                    className={`transition-colors hover:text-white ${focusRing}`}
+                    className={`transition-colors hover:text-[#112638] ${focusRing}`}
                   >
                     Home
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
-                <li aria-current="page" className="text-white">
+                <li aria-current="page" className="text-[#112638]">
                   About Dr. Anand Patil
                 </li>
               </ol>
             </nav>
-
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#BFF3F6] ring-1 ring-white/15">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#5FD6D0]" />
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#EAF5F7] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#24676D] ring-1 ring-[#DDE9EA]">
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#24676D]" />
               About the Doctor
             </p>
-
             <h1
               id="doctor-title"
               className="mt-5 font-display text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
             >
               {firstWords}
               <br />
-              <span className="bg-gradient-to-r from-[#7FE0EA] via-[#5FD6D0] to-[#8CE6E1] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#24676D] via-[#24676D] to-[#006889] bg-clip-text text-transparent">
                 {lastWord}
               </span>
-              <span className="text-[#5FD6D0]">.</span>
+              <span className="text-[#24676D]">.</span>
             </h1>
-
-            <p className="mt-6 max-w-xl text-lg font-medium text-white/90">
+            <p className="mt-6 max-w-xl text-lg font-medium text-[#334D60]">
               {DOCTOR.credentials}
             </p>
-            <p className="mt-2 max-w-xl text-sm uppercase tracking-[0.16em] text-[#BFF3F6]">
+            <p className="mt-2 max-w-xl text-sm uppercase tracking-[0.16em] text-[#24676D]">
               {DOCTOR.title}
             </p>
-
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/contact"
-                className={`group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#5FD6D0] px-7 text-sm font-semibold text-[#06182E] transition-colors hover:bg-[#8CE6E1] ${focusRing}`}
+                className={`group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#D5EDF3] px-7 text-sm font-semibold text-[#112638] transition-colors hover:bg-[#C5E4EB] ${focusRing}`}
               >
                 Appointment Enquiry
                 <ArrowUpRight
@@ -230,14 +213,13 @@ export default function DoctorPage() {
               </Link>
               <a
                 href="#credentials"
-                className={`inline-flex min-h-[52px] items-center gap-2 rounded-full bg-white/10 px-7 text-sm font-semibold text-white ring-1 ring-white/30 transition-colors hover:bg-white/20 ${focusRing}`}
+                className={`inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#EAF5F7] px-7 text-sm font-semibold text-[#112638] ring-1 ring-[#BCD3DA] transition-colors hover:bg-[#DDEFF3] ${focusRing}`}
               >
                 <GraduationCap className="h-4 w-4" aria-hidden="true" />
                 View qualifications
               </a>
             </div>
           </div>
-
           {/* Photo composition */}
           <div className="lg:col-span-5">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-sm sm:max-w-md">
@@ -253,21 +235,20 @@ export default function DoctorPage() {
                   cx="200"
                   cy="200"
                   r="190"
-                  stroke="#7FE0EA"
+                  stroke="#24676D"
                   strokeOpacity="0.35"
                   strokeDasharray="4 12"
                   strokeLinecap="round"
                 />
-                <circle cx="200" cy="10" r="5" fill="#5FD6D0" />
-                <circle cx="390" cy="200" r="3.5" fill="#7FE0EA" />
+                <circle cx="200" cy="10" r="5" fill="#24676D" />
+                <circle cx="390" cy="200" r="3.5" fill="#24676D" />
               </svg>
               <div
                 aria-hidden="true"
                 className="absolute inset-4 rounded-t-[999px] rounded-b-[2.5rem] bg-gradient-to-b from-sky-400/40 to-teal-400/30 blur-2xl"
               />
-
               {/* arch frame */}
-              <div className="relative h-full w-full overflow-hidden rounded-t-[999px] rounded-b-[2.5rem] bg-slate-900 shadow-2xl shadow-black/40 ring-1 ring-white/30">
+              <div className="relative h-full w-full overflow-hidden rounded-t-[999px] rounded-b-[2.5rem] bg-slate-900 shadow-2xl shadow-black/40 ring-1 ring-[#BCD3DA]">
                 <Image
                   src="/images/dr.png"
                   alt={DOCTOR.name}
@@ -277,7 +258,6 @@ export default function DoctorPage() {
                   className="object-cover object-top"
                 />
               </div>
-
               {chipA && (
                 <div className="dp-float absolute left-0 top-[18%] z-10 -translate-x-3 sm:-translate-x-10">
                   <FloatChip icon={GraduationCap} label={chipA} className="static" />
@@ -297,7 +277,6 @@ export default function DoctorPage() {
           </div>
         </div>
       </section>
-
       {/* ============================ CREDENTIALS ============================ */}
       <section
         id="credentials"
@@ -308,7 +287,7 @@ export default function DoctorPage() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-60"
           style={{
-            backgroundImage: "radial-gradient(#dbe4ee 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(#D6E7ED 1px, transparent 1px)",
             backgroundSize: "24px 24px",
             maskImage: "linear-gradient(to bottom, black 0%, transparent 40%)",
             WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 40%)",
@@ -328,7 +307,6 @@ export default function DoctorPage() {
               <span className="text-sky-600">.</span>
             </h2>
           </div>
-
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {/* Qualifications - large card */}
             <div className="dp-reveal rounded-3xl bg-gradient-to-br from-sky-300 via-slate-200 to-teal-300 p-px lg:col-span-2 lg:row-span-2">
@@ -344,7 +322,6 @@ export default function DoctorPage() {
                     Qualifications
                   </h3>
                 </div>
-
                 <ol className="relative mt-8 space-y-8 pl-8">
                   <span
                     aria-hidden="true"
@@ -375,15 +352,14 @@ export default function DoctorPage() {
                       Consulting at Ganj Golai, Latur
                     </p>
                     <p className="mt-1 text-sm text-slate-500">
-                      Dr. Anand Patil Skin &amp; Cosmetic Laser Clinic
+                      Dr. Anand Patil Skin & Cosmetic Laser Clinic
                     </p>
                   </li>
                 </ol>
               </div>
             </div>
-
             {/* Registration - dark card */}
-            <div className="dp-reveal relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0D2E52] via-[#0A2342] to-[#06182E] p-7 text-white shadow-[var(--shadow-lifted)]">
+            <div className="dp-reveal relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FCFEFE] via-[#F2FAFC] to-[#E8F5F8] p-7 text-[#112638] shadow-[var(--shadow-lifted)]">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -391,31 +367,30 @@ export default function DoctorPage() {
                 className="pointer-events-none absolute -right-24 -top-24 h-72 w-72"
                 fill="none"
               >
-                <circle cx="200" cy="200" r="190" stroke="#7FE0EA" strokeOpacity="0.15" />
-                <circle cx="200" cy="200" r="140" stroke="#7FE0EA" strokeOpacity="0.12" />
+                <circle cx="200" cy="200" r="190" stroke="#24676D" strokeOpacity="0.15" />
+                <circle cx="200" cy="200" r="140" stroke="#24676D" strokeOpacity="0.12" />
               </svg>
               <span
                 aria-hidden="true"
-                className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#7FE0EA]"
+                className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EAF5F7] text-[#24676D]"
               >
                 <ShieldCheck className="h-6 w-6" />
               </span>
               <h3 className="relative mt-5 font-display text-xl font-semibold">
                 Registration
               </h3>
-              <p className="relative mt-2 text-[15px] leading-relaxed text-[#E4EEF7]">
+              <p className="relative mt-2 text-[15px] leading-relaxed text-[#334D60]">
                 {council ?? "Registered medical practitioner"}
               </p>
               {REGISTRATION_NUMBER && (
-                <p className="relative mt-4 inline-block rounded-xl bg-white/10 px-4 py-2 text-sm ring-1 ring-white/20">
-                  <span className="text-white/60">Registration No. </span>
+                <p className="relative mt-4 inline-block rounded-xl bg-[#EAF5F7] px-4 py-2 text-sm ring-1 ring-white/20">
+                  <span className="text-[#4B6471]">Registration No. </span>
                   <span className="font-semibold tracking-wide">
                     {REGISTRATION_NUMBER}
                   </span>
                 </p>
               )}
             </div>
-
             {/* Memberships */}
             <div className="dp-reveal rounded-3xl border border-slate-200 bg-white p-7 shadow-[var(--shadow-card)]">
               <div className="flex items-center gap-3">
@@ -444,7 +419,6 @@ export default function DoctorPage() {
                 ))}
               </ul>
             </div>
-
             {/* Practice strip */}
             <div className="dp-reveal lg:col-span-3">
               <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-gradient-to-r from-sky-50 via-white to-teal-50 p-7 ring-1 ring-sky-100 sm:p-8 md:flex-row md:items-center">
@@ -486,7 +460,6 @@ export default function DoctorPage() {
           </div>
         </div>
       </section>
-
       {/* ======================= ABOUT + CONSULTATION ======================= */}
       <section
         aria-labelledby="about-heading"
@@ -509,12 +482,11 @@ export default function DoctorPage() {
             >
               About Dr. Anand Patil<span className="text-sky-600">.</span>
             </h2>
-
             <div className="mt-7 space-y-5 text-base leading-relaxed text-slate-600 sm:text-lg">
               <p>
                 Dr. Anand Patil is a dermatologist with an MBBS and a D.V.D.
-                (Dermatology, Venereology &amp; Leprosy). He sees patients with
-                skin, hair and nail concerns at Dr. Anand Patil Skin &amp;
+                (Dermatology, Venereology & Leprosy). He sees patients with
+                skin, hair and nail concerns at Dr. Anand Patil Skin &
                 Cosmetic Laser Clinic, Ganj Golai, Latur.
               </p>
               <p>
@@ -524,7 +496,6 @@ export default function DoctorPage() {
                 assessment.
               </p>
             </div>
-
             <div className="mt-8 flex items-start gap-3 rounded-2xl border border-sky-100 bg-white/80 px-5 py-4 text-sm leading-relaxed text-slate-600">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-sky-600" aria-hidden="true" />
               <p>
@@ -533,7 +504,6 @@ export default function DoctorPage() {
               </p>
             </div>
           </div>
-
           {/* Consultation steps */}
           <div className="lg:col-span-6">
             <div className="rounded-[2rem] bg-gradient-to-br from-sky-300 via-white to-teal-300 p-px shadow-[var(--shadow-card)]">
@@ -576,18 +546,17 @@ export default function DoctorPage() {
           </div>
         </div>
       </section>
-
       {/* ========================== AREAS OF CONSULTATION ========================== */}
       <section
         aria-labelledby="areas-heading"
-        className="relative overflow-hidden bg-gradient-to-br from-[#0D2E52] via-[#0A2342] to-[#06182E] py-20 text-white sm:py-24 lg:py-28"
+        className="relative overflow-hidden bg-gradient-to-br from-[#FCFEFE] via-[#F2FAFC] to-[#E8F5F8] py-20 text-[#112638] sm:py-24 lg:py-28"
       >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              "radial-gradient(rgba(127,224,234,0.4) 1px, transparent 1px)",
+              "radial-gradient(rgba(118,165,181,0.4) 1px, transparent 1px)",
             backgroundSize: "28px 28px",
             maskImage:
               "radial-gradient(ellipse at 20% 10%, black 0%, transparent 60%)",
@@ -598,8 +567,8 @@ export default function DoctorPage() {
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-end lg:gap-16">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#BFF3F6] ring-1 ring-white/15">
-                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#5FD6D0]" />
+              <p className="inline-flex items-center gap-2 rounded-full bg-[#EAF5F7] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#24676D] ring-1 ring-[#DDE9EA]">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#24676D]" />
                 Consultation areas
               </p>
               <h2
@@ -607,15 +576,14 @@ export default function DoctorPage() {
                 className="mt-5 font-display text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl"
               >
                 Areas of consultation
-                <span className="text-[#5FD6D0]">.</span>
+                <span className="text-[#24676D]">.</span>
               </h2>
             </div>
-            <p className="text-base leading-relaxed text-white/75 lg:pb-2">
+            <p className="text-base leading-relaxed text-[#4B6471] lg:pb-2">
               The areas in which Dr. Anand Patil sees patients. Suitability of
               any treatment is decided only after a clinical assessment.
             </p>
           </div>
-
           <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {DOCTOR.specializations.map((s: string) => {
               const [title, rest] = s.split(" (");
@@ -623,11 +591,11 @@ export default function DoctorPage() {
               return (
                 <li
                   key={s}
-                  className="dp-reveal group relative overflow-hidden rounded-3xl bg-white/5 p-7 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 hover:ring-[#7FE0EA]/40 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                  className="dp-reveal group relative overflow-hidden rounded-3xl bg-white/75 p-7 ring-1 ring-[#DDE9EA] transition-all duration-300 hover:-translate-y-1 hover:bg-[#EAF5F7] hover:ring-[#24676D]/40 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   <span
                     aria-hidden="true"
-                    className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7FE0EA] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#24676D] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   />
                   <span
                     aria-hidden="true"
@@ -639,7 +607,7 @@ export default function DoctorPage() {
                     {title}
                   </h3>
                   {detail && (
-                    <p className="mt-2 text-sm leading-relaxed text-white/70">
+                    <p className="mt-2 text-sm leading-relaxed text-[#4B6471]">
                       {detail}
                     </p>
                   )}
@@ -649,7 +617,6 @@ export default function DoctorPage() {
           </ul>
         </div>
       </section>
-
       <CTASection
         title="Book a consultation with Dr. Anand Patil"
         description="Consultations are by appointment, and walk-ins are welcome. Treatment options are explained after a clinical assessment."

@@ -1,46 +1,54 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Clock, User, List } from "lucide-react";
-import { BLOG_POSTS } from "@/data/blog";
-import { formatDate } from "@/lib/utils";
-import { BlogCard } from "@/components/blog/blog-card";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowUpRight, CalendarDays, Clock } from "lucide-react";
 import { ShareButtons } from "@/components/blog/share-buttons";
 import { JsonLd } from "@/components/ui/json-ld";
+import { BLOG_POSTS } from "@/data/blog";
+import { SITE_CONFIG } from "@/data/site-config";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
-import { CTASection } from "@/components/home/cta-section";
-import { SITE_CONFIG } from "@/data/site-config";
+import { formatDate } from "@/lib/utils";
+
+type BlogPageProps = { params: Promise<{ slug: string }> };
+
+const focus =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#28797C]";
 
 export async function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({ slug: post.slug }));
+  return BLOG_POSTS.map(({ slug }) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: BlogPageProps) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const post = BLOG_POSTS.find((article) => article.slug === slug);
   if (!post) return {};
-  return buildMetadata({ title: post.title, description: post.excerpt, path: `/blog/${post.slug}` });
+
+  return buildMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blog/${post.slug}`,
+  });
 }
 
-const CATEGORY_COLORS: Record<string, string> = {
-  "Skin Care": "from-[var(--color-primary)] to-[var(--color-secondary)]",
-  "Acne Care": "from-[var(--color-secondary)] to-purple-500",
-  "Hair Care": "from-[var(--color-accent)] to-teal-600",
-};
-
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function BlogPostPage({ params }: BlogPageProps) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const post = BLOG_POSTS.find((article) => article.slug === slug);
   if (!post) notFound();
 
-  const related = BLOG_POSTS.filter((p) => p.slug !== slug).slice(0, 2);
-  const gradient = CATEGORY_COLORS[post.category] ?? CATEGORY_COLORS["Skin Care"];
+  const path = `/blog/${post.slug}`;
+  const related = BLOG_POSTS.filter((article) => article.slug !== slug)
+    .sort((a, b) => Number(b.category === post.category) - Number(a.category === post.category))
+    .slice(0, 2);
 
   return (
-    <>
+    <div className="bg-white text-[#112638]">
       <JsonLd
         data={[
-          getBreadcrumbSchema([{ name: "Home", path: "/" }, { name: "Blog", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }]),
+          getBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path },
+          ]),
           {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
@@ -53,82 +61,93 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         ]}
       />
 
-      <article className="pt-[calc(var(--header-height)+3rem)]">
-        <header className="mx-auto max-w-3xl px-6 text-center">
-          <nav aria-label="Breadcrumb" className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-muted)] mb-6">
-            <Link href="/" className="hover:text-[var(--color-secondary)]">Home</Link>
-            <span>/</span>
-            <Link href="/blog" className="hover:text-[var(--color-secondary)]">Blog</Link>
-          </nav>
-          <span className="inline-flex items-center gap-2 rounded-full bg-[var(--color-bg-light)] px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-secondary)]">
-            {post.category}
-          </span>
-          <h1 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)] leading-tight">{post.title}</h1>
-          <div className="mt-6 flex items-center justify-center gap-5 text-sm text-[var(--color-muted)] flex-wrap">
-            <span className="flex items-center gap-1.5"><User className="h-4 w-4" /> {post.author}</span>
-            <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> {formatDate(post.date)}</span>
-            <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> {post.readTime}</span>
+      <article aria-labelledby="article-title">
+        <header className="border-b border-[#DDE9EA] bg-[#F2F9FC] pt-[calc(var(--header-height,80px)+1.25rem)]">
+          <div className="mx-auto max-w-6xl px-6 pb-10 sm:px-10 sm:pb-14">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-slate-600">
+              <Link href="/" className={`rounded-sm underline-offset-4 hover:underline ${focus}`}>Home</Link>
+              <span aria-hidden="true">/</span>
+              <Link href="/blog" className={`rounded-sm underline-offset-4 hover:underline ${focus}`}>Blog</Link>
+            </nav>
+
+            <div className="mt-7 max-w-3xl border-l-2 border-[#669AA3] pl-4 sm:pl-6">
+              <p className="text-sm font-medium text-[#24676D]">{post.category}</p>
+              <h1 id="article-title" className="mt-2 font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+                {post.title}
+              </h1>
+              <ul className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-600">
+                <li className="font-medium text-[#334D60]">{post.author}</li>
+                <li className="flex items-center gap-2">
+                  <CalendarDays aria-hidden="true" className="h-4 w-4 text-[#24676D]" />
+                  <time dateTime={post.date}>{formatDate(post.date)}</time>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Clock aria-hidden="true" className="h-4 w-4 text-[#24676D]" />
+                  {post.readTime}
+                </li>
+              </ul>
+            </div>
           </div>
         </header>
 
-        <div className={`relative mx-auto mt-10 max-w-5xl h-64 sm:h-80 rounded-[2rem] bg-gradient-to-br ${gradient} overflow-hidden`}>
-          <div className="absolute inset-0 bg-clarity-grid opacity-20" />
-        </div>
+        <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10 sm:py-14">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:gap-12">
+            <div className="min-w-0">
+              <div className="prose-content space-y-6 break-words text-base leading-[1.8] text-[#334D60] sm:text-lg">
+                {post.content.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+              </div>
 
-        <div className="mx-auto max-w-3xl px-6 py-16 grid lg:grid-cols-[1fr_180px] gap-12">
-          <div>
-            <div className="mb-10 rounded-2xl bg-[var(--color-bg-light)] p-6">
-              <h3 className="flex items-center gap-2 font-display font-semibold text-sm text-[var(--color-ink)] mb-3">
-                <List className="h-4 w-4" /> In This Article
-              </h3>
-              <p className="text-sm text-[var(--color-muted)]">
-                A {post.readTime.toLowerCase()} guide covering: {post.tags.join(", ")}.
+              <div className="mt-9 border-t border-[#DDE9EA] pt-6">
+                <ShareButtons title={post.title} slug={post.slug} />
+              </div>
+            </div>
+
+            <aside className="self-start rounded-2xl border border-[#DDE9EA] bg-[#F6FAFB] p-5" aria-labelledby="reading-note">
+              <h2 id="reading-note" className="font-display text-lg font-semibold">About this article</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                This article provides general health information. An individual assessment can help put it in context.
               </p>
-            </div>
-
-            <div className="prose-content space-y-6 text-[var(--color-ink)]/85 leading-relaxed">
-              {post.content.map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
-
-            <div className="mt-10 flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span key={tag} className="rounded-full bg-[var(--color-bg-light)] px-3.5 py-1.5 text-xs font-medium text-[var(--color-secondary)]">
-                  #{tag.replace(/\s+/g, "")}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-10 pt-8 border-t border-slate-100">
-              <ShareButtons title={post.title} slug={post.slug} />
-            </div>
+              {post.tags.length > 0 && (
+                <ul aria-label="Article topics" className="mt-4 flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <li key={tag} className="rounded-full border border-[#DDE9EA] bg-white px-3 py-1 text-xs font-medium text-[#24676D]">
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </aside>
           </div>
-
-          <aside className="hidden lg:block">
-            <div className="sticky top-28 rounded-2xl border border-slate-100 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)] mb-3">Written By</p>
-              <p className="font-display font-semibold text-[var(--color-ink)] text-sm">{post.author}</p>
-              <p className="text-xs text-[var(--color-muted)] mt-1">Consultant Dermatologist</p>
-            </div>
-          </aside>
         </div>
       </article>
 
-      {related.length > 0 && (
-        <section className="py-24 bg-[var(--color-bg-light)]">
-          <div className="mx-auto max-w-7xl px-6">
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-ink)] mb-10 text-center">Related Articles</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {related.map((p) => (
-                <BlogCard key={p.slug} post={p} />
-              ))}
-            </div>
+      <section aria-labelledby="related-title" className="border-t border-[#DDE9EA] bg-[#F4F9FB] py-9 sm:py-12">
+        <div className="mx-auto max-w-6xl px-6 sm:px-10">
+          <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2">
+            <h2 id="related-title" className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+              {related.length > 0 ? "Related articles" : "More reading"}
+            </h2>
+            <Link href="/blog" className={`inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-[#24676D] underline-offset-4 hover:underline ${focus}`}>
+              <ArrowLeft aria-hidden="true" className="h-4 w-4" /> Back to blog
+            </Link>
           </div>
-        </section>
-      )}
-
-      <CTASection />
-    </>
+          {related.length > 0 && (
+            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+              {related.map((article) => (
+                <li key={article.slug}>
+                  <Link href={`/blog/${article.slug}`} className={`flex h-full items-start justify-between gap-4 rounded-2xl border border-[#DDE9EA] bg-white p-5 hover:border-[#86B7BB] ${focus}`}>
+                    <div>
+                      <p className="text-sm text-[#24676D]">{article.category}</p>
+                      <h3 className="mt-1 font-display text-xl font-semibold leading-tight">{article.title}</h3>
+                    </div>
+                    <ArrowUpRight aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-[#24676D]" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }

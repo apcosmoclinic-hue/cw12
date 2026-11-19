@@ -52,7 +52,7 @@ export function Footer() {
               <li><Link href="/doctor" className="text-white/75 hover:text-white transition-colors">About Dr. Anand Patil</Link></li>
               <li><Link href="/treatments" className="text-white/75 hover:text-white transition-colors">All Treatments</Link></li>
               <li><Link href="/gallery" className="text-white/75 hover:text-white transition-colors">Gallery</Link></li>
-              <li><Link href="/testimonials" className="text-white/75 hover:text-white transition-colors">Testimonials</Link></li>
+              {/* <li><Link href="/testimonials" className="text-white/75 hover:text-white transition-colors">Testimonials</Link></li> */}
               <li><Link href="/blog" className="text-white/75 hover:text-white transition-colors">Blog</Link></li>
               <li><Link href="/contact" className="text-white/75 hover:text-white transition-colors">Contact</Link></li>
             </ul>
@@ -120,13 +120,20 @@ export function Footer() {
     /> */}
 
     <a
-      href="https://codewinx.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="font-medium text-white hover:text-[var(--color-primary)] transition-colors"
-    >
-      Codewinx IT Solutions
-    </a>
+  href="https://www.codewinxitsolution.com/"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="CodeWinx IT Solutions — opens in a new tab"
+  className="rounded-md text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300 md:text-right"
+>
+  <p className="text-xs text-gray-400">
+    Designed &amp; Developed by
+  </p>
+
+  <p className="mt-1 text-sm font-medium text-teal-300 hover:text-teal-200">
+    CodeWinx IT Solutions
+  </p>
+</a>
   </div>
 </div>
           <div className="flex items-center gap-6">

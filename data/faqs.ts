@@ -45,7 +45,7 @@ export const NAV_LINKS: NavLink[] = [
     children: TREATMENTS.slice(0, 8).map((t) => ({ label: t.shortName, href: `/treatments/${t.slug}` })),
   },
   { label: "Gallery", href: "/gallery" },
-  { label: "Testimonials", href: "/testimonials" },
+  // { label: "Testimonials", href: "/testimonials" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];

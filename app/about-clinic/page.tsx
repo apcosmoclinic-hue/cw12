@@ -106,7 +106,7 @@ export default function AboutClinicPage() {
       {/* ------------------------ Hero ------------------------ */}
       <section
         aria-labelledby="page-title"
-        className="relative overflow-hidden bg-gradient-to-br from-[#0D2E52] via-[#0A2342] to-[#06182E] text-white"
+        className="relative overflow-hidden bg-gradient-to-br from-[#FCFEFE] via-[#F2FAFC] to-[#E8F5F8] text-[#112638]"
       >
         {/* decorative layers */}
         <div
@@ -114,7 +114,7 @@ export default function AboutClinicPage() {
           className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             backgroundImage:
-              "radial-gradient(rgba(127,224,234,0.35) 1px, transparent 1px)",
+              "radial-gradient(rgba(118,165,181,0.16) 1px, transparent 1px)",
             backgroundSize: "26px 26px",
             maskImage:
               "radial-gradient(ellipse at 80% 20%, black 0%, transparent 65%)",
@@ -135,12 +135,12 @@ export default function AboutClinicPage() {
         >
           <defs>
             <linearGradient id="hero-arc" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#00B4D0" />
-              <stop offset="100%" stopColor="#0A6FB8" stopOpacity="0" />
+              <stop offset="0%" stopColor="#A9D9E4" />
+              <stop offset="100%" stopColor="#C6E5EF" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <circle cx="200" cy="200" r="190" stroke="#7FE0EA" strokeOpacity="0.14" />
-          <circle cx="200" cy="200" r="140" stroke="#7FE0EA" strokeOpacity="0.1" />
+          <circle cx="200" cy="200" r="190" stroke="#24676D" strokeOpacity="0.14" />
+          <circle cx="200" cy="200" r="140" stroke="#24676D" strokeOpacity="0.1" />
           <circle
             cx="200"
             cy="200"
@@ -156,24 +156,24 @@ export default function AboutClinicPage() {
           {/* Left: title + actions */}
           <div className="lg:col-span-7">
             <nav aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2 text-sm text-white/70">
+              <ol className="flex items-center gap-2 text-sm text-[#4B6471]">
                 <li>
                   <Link
                     href="/"
-                    className="transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                    className="transition-colors hover:text-[#112638] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
                   >
                     Home
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
-                <li aria-current="page" className="text-white">
+                <li aria-current="page" className="text-[#112638]">
                   About the Clinic
                 </li>
               </ol>
             </nav>
 
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#BFF3F6] ring-1 ring-white/15">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#5FD6D0]" />
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/65 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#24676D] ring-1 ring-[#DDE9EA]">
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#D5EDF3]" />
               About the Clinic
             </p>
 
@@ -183,13 +183,13 @@ export default function AboutClinicPage() {
             >
               Clinic
               <br />
-              <span className="bg-gradient-to-r from-[#7FE0EA] to-[#5FD6D0] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#24676D] to-[#006889] bg-clip-text text-transparent">
                 information
               </span>
-              <span className="text-[#5FD6D0]">.</span>
+              <span className="text-[#24676D]">.</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#334D60] sm:text-lg">
               Factual information about the clinic, its facilities, clinic hours
               and how to contact it.
             </p>
@@ -197,7 +197,7 @@ export default function AboutClinicPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/contact"
-                className="group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#5FD6D0] px-7 text-sm font-semibold text-[#06182E] transition-colors hover:bg-[#8CE6E1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                className="group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#D5EDF3] px-7 text-sm font-semibold text-[#112638] transition-colors hover:bg-[#C5E4EB] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
               >
                 Appointment Enquiry
                 <ArrowUpRight
@@ -209,7 +209,7 @@ export default function AboutClinicPage() {
                 href={directionsHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-white/10 px-7 text-sm font-semibold text-white ring-1 ring-white/30 transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-white/65 px-7 text-sm font-semibold text-[#112638] ring-1 ring-[#BCD3DA] transition-colors hover:bg-[#E7F3F7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
               >
                 <Navigation className="h-4 w-4" aria-hidden="true" />
                 Get directions
@@ -219,9 +219,9 @@ export default function AboutClinicPage() {
             {/* On-page links */}
             <nav
               aria-label="On this page"
-              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-sm"
+              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#DDE9EA] pt-6 text-sm"
             >
-              <span className="text-white/60">On this page</span>
+              <span className="text-[#4B6471]">On this page</span>
               {[
                 { href: "#overview-heading", label: "Overview" },
                 { href: "#facilities-heading", label: "Facilities" },
@@ -230,7 +230,7 @@ export default function AboutClinicPage() {
                 <a
                   key={l.href}
                   href={l.href}
-                  className="inline-flex min-h-[44px] items-center font-medium text-[#BFF3F6] underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                  className="inline-flex min-h-[44px] items-center font-medium text-[#24676D] underline-offset-4 transition-colors hover:text-[#112638] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
                 >
                   {l.label}
                 </a>
@@ -243,22 +243,22 @@ export default function AboutClinicPage() {
             aria-label="Clinic at a glance"
             className="lg:col-span-5"
           >
-            <div className="rounded-[2rem] bg-white/10 p-6 shadow-2xl shadow-black/20 ring-1 ring-white/20 backdrop-blur-md sm:p-8">
+            <div className="rounded-[2rem] bg-white/65 p-6 shadow-2xl shadow-slate-900/[0.07] ring-1 ring-[#DDE9EA] backdrop-blur-md sm:p-8">
               <h2 className="font-display text-xl font-semibold">At a glance</h2>
 
               <dl className="mt-5 space-y-5">
                 <div className="flex gap-4">
                   <span
                     aria-hidden="true"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[#7FE0EA]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/65 text-[#24676D]"
                   >
                     <MapPin className="h-5 w-5" />
                   </span>
                   <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wider text-white/60">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-[#4B6471]">
                       Address
                     </dt>
-                    <dd className="mt-1 text-[15px] leading-relaxed text-[#E4EEF7]">
+                    <dd className="mt-1 text-[15px] leading-relaxed text-[#334D60]">
                       {SITE_CONFIG.address.full}
                     </dd>
                   </div>
@@ -267,15 +267,15 @@ export default function AboutClinicPage() {
                 <div className="flex gap-4">
                   <span
                     aria-hidden="true"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[#7FE0EA]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/65 text-[#24676D]"
                   >
                     <Clock className="h-5 w-5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <dt className="text-xs font-semibold uppercase tracking-wider text-white/60">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-[#4B6471]">
                       Clinic hours
                     </dt>
-                    <dd className="mt-1 space-y-1 text-[15px] text-[#E4EEF7]">
+                    <dd className="mt-1 space-y-1 text-[15px] text-[#334D60]">
                       {groupedHours.map((g) => (
                         <p
                           key={g.label}
@@ -286,7 +286,7 @@ export default function AboutClinicPage() {
                             className={
                               g.time === "Closed"
                                 ? "font-semibold text-rose-300"
-                                : "font-semibold text-white"
+                                : "font-semibold text-[#112638]"
                             }
                           >
                             {g.time}
@@ -300,18 +300,18 @@ export default function AboutClinicPage() {
                 <div className="flex gap-4">
                   <span
                     aria-hidden="true"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[#7FE0EA]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/65 text-[#24676D]"
                   >
                     <Phone className="h-5 w-5" />
                   </span>
                   <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wider text-white/60">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-[#4B6471]">
                       Phone
                     </dt>
                     <dd className="mt-1">
                       <a
                         href={`tel:${SITE_CONFIG.contact.phonePrimaryRaw}`}
-                        className="inline-flex min-h-[44px] items-center text-[15px] font-semibold text-white underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                        className="inline-flex min-h-[44px] items-center text-[15px] font-semibold text-[#112638] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
                       >
                         {SITE_CONFIG.contact.phonePrimary}
                       </a>
@@ -320,7 +320,7 @@ export default function AboutClinicPage() {
                 </div>
               </dl>
 
-              <p className="mt-5 border-t border-white/15 pt-4 text-sm text-white/70">
+              <p className="mt-5 border-t border-[#DDE9EA] pt-4 text-sm text-[#4B6471]">
                 Walk-ins are welcome. Calling ahead to book a time is
                 recommended.
               </p>
@@ -338,7 +338,7 @@ export default function AboutClinicPage() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-60"
           style={{
-            backgroundImage: "radial-gradient(#dbe4ee 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(#D6E7F3 1px, transparent 1px)",
             backgroundSize: "24px 24px",
             maskImage: "linear-gradient(to bottom, black 0%, transparent 45%)",
             WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 45%)",
@@ -532,7 +532,7 @@ export default function AboutClinicPage() {
             </div>
 
             {/* Address + contact */}
-            <div className="relative flex flex-col overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#0D2E52] via-[#0A2342] to-[#06182E] p-7 text-white shadow-[var(--shadow-lifted)] sm:p-9">
+            <div className="relative flex flex-col overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#FCFEFE] via-[#F2FAFC] to-[#E8F5F8] p-7 text-[#112638] shadow-[var(--shadow-lifted)] sm:p-9">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -542,11 +542,11 @@ export default function AboutClinicPage() {
               >
                 <defs>
                   <linearGradient id="about-arc" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#00B4D0" />
-                    <stop offset="100%" stopColor="#0A6FB8" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#A9D9E4" />
+                    <stop offset="100%" stopColor="#C6E5EF" stopOpacity="0" />
                   </linearGradient>
                 </defs>
-                <circle cx="200" cy="200" r="190" stroke="#7FE0EA" strokeOpacity="0.12" />
+                <circle cx="200" cy="200" r="190" stroke="#24676D" strokeOpacity="0.12" />
                 <circle
                   cx="200"
                   cy="200"
@@ -561,37 +561,37 @@ export default function AboutClinicPage() {
               <div className="relative flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#7FE0EA]"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/65 text-[#24676D]"
                 >
                   <MapPin className="h-6 w-6" />
                 </span>
                 <h3 className="font-display text-2xl font-semibold">Address</h3>
               </div>
-              <p className="relative mt-5 text-base leading-relaxed text-[#E4EEF7]">
+              <p className="relative mt-5 text-base leading-relaxed text-[#334D60]">
                 {SITE_CONFIG.address.full}
               </p>
 
-              <p className="relative mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-[#E4EEF7] ring-1 ring-white/15">
-                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#7FE0EA]" />
+              <p className="relative mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white/65 px-4 py-1.5 text-sm text-[#334D60] ring-1 ring-[#DDE9EA]">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#24676D]" />
                 Opposite the bus stand
               </p>
 
-              <ul className="relative mt-7 space-y-1 border-t border-white/15 pt-5 text-base">
+              <ul className="relative mt-7 space-y-1 border-t border-[#DDE9EA] pt-5 text-base">
                 <li>
                   <a
                     href={`tel:${SITE_CONFIG.contact.phonePrimaryRaw}`}
-                    className="inline-flex min-h-[44px] items-center gap-3 text-[#E4EEF7] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                    className="inline-flex min-h-[44px] items-center gap-3 text-[#334D60] transition-colors hover:text-[#112638] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
                   >
-                    <Phone className="h-4 w-4 text-[#7FE0EA]" aria-hidden="true" />
+                    <Phone className="h-4 w-4 text-[#24676D]" aria-hidden="true" />
                     {SITE_CONFIG.contact.phonePrimary}
                   </a>
                 </li>
                 <li>
                   <a
                     href={`mailto:${SITE_CONFIG.contact.email}`}
-                    className="inline-flex min-h-[44px] items-center gap-3 break-all text-[#E4EEF7] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                    className="inline-flex min-h-[44px] items-center gap-3 break-all text-[#334D60] transition-colors hover:text-[#112638] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
                   >
-                    <Mail className="h-4 w-4 shrink-0 text-[#7FE0EA]" aria-hidden="true" />
+                    <Mail className="h-4 w-4 shrink-0 text-[#24676D]" aria-hidden="true" />
                     {SITE_CONFIG.contact.email}
                   </a>
                 </li>
@@ -600,7 +600,7 @@ export default function AboutClinicPage() {
               <div className="relative mt-auto flex flex-wrap gap-3 pt-6">
                 <Link
                   href="/contact"
-                  className={`group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#5FD6D0] px-7 text-sm font-semibold text-[#06182E] transition-colors hover:bg-[#8CE6E1] ${focusRing}`}
+                  className={`group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#D5EDF3] px-7 text-sm font-semibold text-[#112638] transition-colors hover:bg-[#C5E4EB] ${focusRing}`}
                 >
                   Appointment Enquiry
                   <ArrowUpRight
@@ -612,7 +612,7 @@ export default function AboutClinicPage() {
                   href={directionsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-white/10 px-7 text-sm font-semibold text-white ring-1 ring-white/30 transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7FE0EA]"
+                  className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-white/65 px-7 text-sm font-semibold text-[#112638] ring-1 ring-[#BCD3DA] transition-colors hover:bg-[#E7F3F7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24676D]"
                 >
                   <Navigation className="h-4 w-4" aria-hidden="true" />
                   Get directions
